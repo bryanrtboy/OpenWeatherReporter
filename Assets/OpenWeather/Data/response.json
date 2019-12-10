@@ -1,0 +1,42 @@
+{
+   "coord":{
+      "lon":-105.08,
+      "lat":39.77
+   },
+   "weather":[
+      {
+         "id":803,
+         "main":"Clouds",
+         "description":"broken clouds",
+         "icon":"04d"
+      }
+   ],
+   "base":"stations",
+   "main":{
+      "temp":274.31,
+      "pressure":1017,
+      "humidity":59,
+      "temp_min":269.26,
+      "temp_max":277.59
+   },
+   "visibility":16093,
+   "wind":{
+      "speed":2.6,
+      "deg":90
+   },
+   "clouds":{
+      "all":75
+   },
+   "dt":1575930328,
+   "sys":{
+      "type":1,
+      "id":3958,
+      "country":"US",
+      "sunrise":1575900586,
+      "sunset":1575934546
+   },
+   "timezone":-25200,
+   "id":5443948,
+   "name":"Wheat Ridge",
+   "cod":200
+}
