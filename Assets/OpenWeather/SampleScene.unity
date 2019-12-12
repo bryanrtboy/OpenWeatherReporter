@@ -195,7 +195,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1e-45, y: 1.61e-43, z: 0, w: 4620956}
+  m_BoundingSphereOverride: {x: 3.018e-42, y: 1.01e-43, z: 6.841744e-39, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -572,6 +572,18 @@ MonoBehaviour:
   m_openMapAPIKey: 126eb3334ca4704ccdc6748d4f1f63ff
   m_lat: 39.7661
   m_lon: -103.0772
+  m_backupReports:
+  - {fileID: 4900000, guid: c080d2d1cd7ad4feebcf1e0410fe52d5, type: 3}
+  - {fileID: 4900000, guid: bed61f3ee2ce146d9bd8347fa35cd6fc, type: 3}
+  - {fileID: 4900000, guid: 13cea780d62ee4ad695bbe8f40aa419f, type: 3}
+  - {fileID: 4900000, guid: acbb4add5313a46d2a413cbf18b21ed5, type: 3}
+  - {fileID: 4900000, guid: 7b0da5b84fb4d430bae984b4a40bc0f4, type: 3}
+  - {fileID: 4900000, guid: 33eda7db054934cab9e4f0a9419019a3, type: 3}
+  - {fileID: 4900000, guid: 9d250674713544d7aa3eda55d4b796b9, type: 3}
+  - {fileID: 4900000, guid: 55aeab21eb56e48759763643b6f6784d, type: 3}
+  - {fileID: 4900000, guid: 558aab9990cc74435a732489599f5c33, type: 3}
+  - {fileID: 4900000, guid: 84d976bec7e894ba484940811c487bf7, type: 3}
+  - {fileID: 4900000, guid: d3be244a60a434ff7883a4bd852ec6b9, type: 3}
   m_UI: {fileID: 1017064434}
   m_currentConditions:
     coord:
