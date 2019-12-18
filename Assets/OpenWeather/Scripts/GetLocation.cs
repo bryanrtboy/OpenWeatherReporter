@@ -24,7 +24,9 @@ public class GetLocation : MonoBehaviour
 #endif
         // First, check if user has location service enabled
         if (!Input.location.isEnabledByUser)
+        {
             yield break;
+        }
 
         // Start service before querying location
         Input.location.Start();

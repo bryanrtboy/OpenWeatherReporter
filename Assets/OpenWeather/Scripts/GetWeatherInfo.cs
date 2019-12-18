@@ -17,8 +17,6 @@ public class GetWeatherInfo : MonoBehaviour
     public float m_lat = 39.7661f;
     [Tooltip("If you are not building to a mobile device, use a placeholder longitude")]
     public float m_lon = -105.077209f;
-    [Tooltip("If you are not building to a mobile device, use a placeholder longitude")]
-    public TextAsset[] m_backupReports;
     [Tooltip("View some basic conditions in the game view here:")]
     public Text m_UI;
 
@@ -26,7 +24,7 @@ public class GetWeatherInfo : MonoBehaviour
 
 
     string m_url = "";
-    int count = 0;
+    int count;
 
     void OnEnable()
     {
@@ -36,6 +34,8 @@ public class GetWeatherInfo : MonoBehaviour
         //Keep track of number of times we have saved weather data
         if (PlayerPrefs.HasKey("Count"))
             count = PlayerPrefs.GetInt("Count");
+        else
+            PlayerPrefs.SetInt("Count", count);
     }
 
     IEnumerator GetRequest(string uri)
@@ -52,14 +52,19 @@ public class GetWeatherInfo : MonoBehaviour
             {
                 Debug.Log(pages[page] + ": Error: " + webRequest.error);
 
-                //If there is no internet, use a backup session
-                Load(m_backupReports[UnityEngine.Random.Range(0, m_backupReports.Length)].text);
+                //If there is no internet, use a backup session that we have saved from previous sessions
+                string fileName = "Date" + UnityEngine.Random.Range(0, 10).ToString() + ".json";
+                var loadedBytes = Load(fileName);
+                var str = System.Text.Encoding.UTF8.GetString(loadedBytes);
+                LoadUsingJson(str);
+                Debug.Log("Loaded " + fileName + " in place of realtime weather");
+                yield break;
             }
             else
             {
                 Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                 SaveData(webRequest.downloadHandler.text);
-                Load(webRequest.downloadHandler.text);
+                LoadUsingJson(webRequest.downloadHandler.text);
 
             }
         }
@@ -68,8 +73,12 @@ public class GetWeatherInfo : MonoBehaviour
     void SaveData(string savedData)
     {
         string dateValue = System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() + System.DateTime.Now.Year.ToString();
-        string dateKey = "Date" + count.ToString(); ;
+        string dateKey = "Date" + count.ToString();
 
+        //Debug.Log("Date key is " + dateKey + ", Date value is " + dateValue);
+
+        //The Key/Value pair is for example – "Date0", 18122019. This means only unique Values get saved for any given Key. One forecast
+        //is thus saved per day, giving us 10 unique records in the backup database saved to disk. 
         if (PlayerPrefs.HasKey(dateKey))
         {
             if (PlayerPrefs.GetString(dateKey) == dateValue)
@@ -79,12 +88,14 @@ public class GetWeatherInfo : MonoBehaviour
             }
             else
             {
+                //Key exists, but was from a different day, so set this as a Key/Value pair and write forecast to disk
                 PlayerPrefs.SetString(dateKey, dateValue);
                 WriteCurrentDataToFile(savedData);
             }
         }
         else
         {
+            //First ten plays will always write to disk
             PlayerPrefs.SetString(dateKey, dateValue);
             WriteCurrentDataToFile(savedData);
         }
@@ -97,12 +108,11 @@ public class GetWeatherInfo : MonoBehaviour
             count = 0;
 
         PlayerPrefs.SetInt("Count", count);
-        StreamWriter writer = new StreamWriter("Assets/OpenWeather/Data/" + count.ToString() + ".json", false);
-        writer.Write(savedData);
-        writer.Close();
+        var bytes = System.Text.Encoding.UTF8.GetBytes(savedData);
+        Save("Date" + count.ToString() + ".json", bytes);
     }
 
-    public void Load(string savedData)
+    public void LoadUsingJson(string savedData)
     {
         JsonUtility.FromJsonOverwrite(savedData, m_currentConditions);
 
@@ -114,6 +124,19 @@ public class GetWeatherInfo : MonoBehaviour
         if (m_UI != null)
             m_UI.text = dateTime.ToShortDateString() + ": It's " + temp.ToString("#.#") + " degrees F and " + m_currentConditions.weather[0].main + " in " + m_currentConditions.name;
     }
+
+    public static void Save(string name, byte[] bytes)
+    {
+        var path = System.IO.Path.Combine(Application.persistentDataPath, name);
+        System.IO.File.WriteAllBytes(path, bytes);
+    }
+
+    public static byte[] Load(string name)
+    {
+        var path = System.IO.Path.Combine(Application.persistentDataPath, name);
+        return System.IO.File.ReadAllBytes(path);
+    }
+
 
 }
 
